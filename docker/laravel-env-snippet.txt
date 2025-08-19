@@ -1,0 +1,9 @@
+DB_CONNECTION=pgsql
+# If Laravel runs on your host machine:
+DB_HOST=127.0.0.1
+# If Laravel runs in another container on the same compose network:
+# DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=secret
