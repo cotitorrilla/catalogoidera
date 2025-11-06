@@ -1,0 +1,62 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use App\Models\CatalogClass;
+use App\Models\Subcategory;
+use App\Models\CatalogObject;
+use App\Models\Attribute;
+
+class CatalogSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $path = database_path('data/catalogo-objetos-2025.json');
+        $classes = json_decode(File::get($path), true);
+
+        foreach ($classes as $classRow) {
+            $class = CatalogClass::updateOrCreate(
+                ['code' => (int)$classRow['codigo']],
+                [
+                    'name'    => $classRow['nombre'] ?? null,
+                    'content' => $classRow['contenido'] ?? null,
+                ]
+            );
+
+            foreach (($classRow['subcategorias'] ?? []) as $subRow) {
+                $sub = Subcategory::updateOrCreate(
+                    ['class_id' => $class->id, 'code' => (int)$subRow['codigo']],
+                    [
+                        'name'    => $subRow['nombre'] ?? null,
+                        'content' => $subRow['contenido'] ?? null,
+                    ]
+                );
+
+                foreach (($subRow['objetos'] ?? []) as $objRow) {
+                    $obj = CatalogObject::updateOrCreate(
+                        ['code' => (int)$objRow['codigo']],
+                        [
+                            'subcategory_id' => $sub->id,
+                            'name'           => $objRow['nombre'] ?? null,
+                            'geometry'       => $objRow['geometria'] ?? null,
+                            'definition'     => $objRow['definicion'] ?? null,
+                        ]
+                    );
+
+                    // Pivot Objeto-Atributos a partir de la lista dentro del objeto
+                    $obj->attributes()->detach();
+                    foreach (($objRow['atributos'] ?? []) as $attRef) {
+                        $att = Attribute::where('code', trim($attRef['codigo']))->first();
+                        if ($att) {
+                            $obj->attributes()->syncWithoutDetaching([
+                                $att->id => ['display_name' => $attRef['denominacion'] ?? null]
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
