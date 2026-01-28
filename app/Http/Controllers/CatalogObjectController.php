@@ -8,12 +8,23 @@ use Illuminate\Http\Request;
 class CatalogObjectController extends Controller
 {
     /**
-     * Devuelve la ficha técnica completa de un objeto.
-     * Incluye geometría, definición y los atributos con sus opciones (dominios).
+     * Muestra la ficha técnica completa de un objeto geográfico.
      */
     public function show($codigo)
     {
-        // Buscamos por el código de IDERA (ej: 10101)
+        $objeto = CatalogObject::where('codigo', $codigo)
+            ->with(['subcategory.catalogClass', 'attributes.domains'])
+            ->firstOrFail();
+
+        return view('catalog.objects.show', compact('objeto'));
+    }
+
+    /**
+     * API: Devuelve la ficha técnica completa de un objeto en JSON.
+     * Incluye geometría, definición y los atributos con sus opciones (dominios).
+     */
+    public function apiShow($codigo)
+    {
         $objeto = CatalogObject::where('codigo', $codigo)
             ->with(['subcategory.catalogClass', 'attributes.domains'])
             ->firstOrFail();
@@ -26,7 +37,6 @@ class CatalogObjectController extends Controller
                 'definicion' => $objeto->definicion,
                 'ruta' => $objeto->subcategory->catalogClass->nombre . ' > ' . $objeto->subcategory->nombre
             ],
-            // Esto genera los campos del formulario automáticamente
             'atributos' => $objeto->attributes->map(function($attr) {
                 return [
                     'codigo' => $attr->codigo,

@@ -9,10 +9,16 @@ class CatalogObject extends Model
     protected $table = 'objects';
     protected $fillable = ['subcategory_id','code','name','geometry','definition'];
 
+    /**
+     * Relación: Un objeto pertenece a una subcategoría.
+     */
     public function subcategory() {
         return $this->belongsTo(Subcategory::class);
     }
 
+    /**
+     * Relación: Un objeto tiene muchos atributos (relación N:M).
+     */
     public function attributes() {
         return $this->belongsToMany(
             Attribute::class,   // modelo relacionado
