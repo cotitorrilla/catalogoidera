@@ -16,13 +16,33 @@ $breadcrumbs = [
 /**
  * Colores asociados a cada clase del catálogo.
  * Se utiliza para mantener consistencia visual en toda la aplicación.
+ * Colores según especificación IDERA:
+ * - Amarillo para Industria y Servicios
+ * - Rojo para Infraestructura Social
+ * - Naranja para Transporte
+ * - Turqueza para Hidrografía y Oceanografía
+ * - Marrón para Geografía Física
+ * - Verde para Biota
+ * - Gris para Demarcación
+ * - Violeta para Defensa y Seguridad
+ * - Celeste para Clima y Meteorología
+ * - Salmón para Catastro
+ * - Verde agua para Unidades Geoestadísticas
+ * - Violeta/Púrpura para Abstracto
  */
 $classColors = [
-    1 => ['bg' => 'bg-amber-500', 'bg-light' => 'bg-amber-100', 'text' => 'text-amber-600', 'border' => 'border-amber-500', 'hex' => '#f97316'],
-    2 => ['bg' => 'bg-emerald-500', 'bg-light' => 'bg-emerald-100', 'text' => 'text-emerald-600', 'border' => 'border-emerald-500', 'hex' => '#10b981'],
-    3 => ['bg' => 'bg-red-500', 'bg-light' => 'bg-red-100', 'text' => 'text-red-600', 'border' => 'border-red-500', 'hex' => '#ef4444'],
-    4 => ['bg' => 'bg-cyan-500', 'bg-light' => 'bg-cyan-100', 'text' => 'text-cyan-600', 'border' => 'border-cyan-500', 'hex' => '#06b6d4'],
-    5 => ['bg' => 'bg-violet-500', 'bg-light' => 'bg-violet-100', 'text' => 'text-violet-600', 'border' => 'border-violet-500', 'hex' => '#8b5cf6'],
+    1  => ['bg' => 'bg-yellow-500', 'bg-light' => 'bg-yellow-100', 'text' => 'text-yellow-600', 'border' => 'border-yellow-500', 'hex' => '#eab308'],
+    2  => ['bg' => 'bg-red-500',    'bg-light' => 'bg-red-100',    'text' => 'text-red-600',    'border' => 'border-red-500',    'hex' => '#ef4444'],
+    3  => ['bg' => 'bg-orange-500', 'bg-light' => 'bg-orange-100', 'text' => 'text-orange-600', 'border' => 'border-orange-500', 'hex' => '#f97316'],
+    4  => ['bg' => 'bg-teal-500',  'bg-light' => 'bg-teal-100',  'text' => 'text-teal-600',  'border' => 'border-teal-500',  'hex' => '#14b8a6'],
+    5  => ['bg' => 'bg-amber-700',  'bg-light' => 'bg-amber-100',  'text' => 'text-amber-700',  'border' => 'border-amber-700',  'hex' => '#b45309'],
+    6  => ['bg' => 'bg-green-500',  'bg-light' => 'bg-green-100',  'text' => 'text-green-600',  'border' => 'border-green-500',  'hex' => '#22c55e'],
+    7  => ['bg' => 'bg-gray-500',   'bg-light' => 'bg-gray-100',   'text' => 'text-gray-600',   'border' => 'border-gray-500',   'hex' => '#6b7280'],
+    9  => ['bg' => 'bg-violet-500', 'bg-light' => 'bg-violet-100', 'text' => 'text-violet-600', 'border' => 'border-violet-500', 'hex' => '#8b5cf6'],
+    10 => ['bg' => 'bg-sky-500',   'bg-light' => 'bg-sky-100',   'text' => 'text-sky-600',   'border' => 'border-sky-500',   'hex' => '#0ea5e9'],
+    11 => ['bg' => 'bg-rose-500',  'bg-light' => 'bg-rose-100',  'text' => 'text-rose-600',  'border' => 'border-rose-500',  'hex' => '#f43f5e'],
+    12 => ['bg' => 'bg-emerald-500', 'bg-light' => 'bg-emerald-100', 'text' => 'text-emerald-600', 'border' => 'border-emerald-500', 'hex' => '#10b981'],
+    23 => ['bg' => 'bg-purple-500', 'bg-light' => 'bg-purple-100', 'text' => 'text-purple-600', 'border' => 'border-purple-500', 'hex' => '#a855f7'],
 ];
 
 /**
@@ -149,11 +169,11 @@ $attributeIcons = [
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-mono text-xs font-semibold {{ $colors['text'] }} {{ $colors['bg-light'] }} px-2 py-1 rounded">
-                                        {{ $attr->codigo }}
+                                        {{ $attr->code }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="font-medium text-gray-800">{{ $attr->nombre }}</span>
+                                    <span class="font-medium text-gray-800">{{ $attr->name }}</span>
                                 </td>
                                 <td class="px-6 py-4 hidden md:table-cell">
                                     <p class="text-sm text-gray-600 max-w-md">
@@ -178,8 +198,8 @@ $attributeIcons = [
                                         <div class="flex flex-wrap gap-1">
                                             @foreach($attr->domains->take(3) as $domain)
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
-                                                      title="{{ $domain->etiqueta }}">
-                                                    {{ $domain->codigo }}
+                                                      title="{{ $domain->label }}">
+                                                    {{ $domain->code }}
                                                 </span>
                                             @endforeach
                                             @if($attr->domains->count() > 3)
@@ -213,9 +233,9 @@ $attributeIcons = [
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center space-x-2">
                                 <span class="font-mono text-xs font-semibold {{ $colors['text'] }} {{ $colors['bg-light'] }} px-2 py-1 rounded">
-                                    {{ $attr->codigo }}
+                                    {{ $attr->code }}
                                 </span>
-                                <span class="font-medium text-gray-800">{{ $attr->nombre }}</span>
+                                <span class="font-medium text-gray-800">{{ $attr->name }}</span>
                             </div>
                             <span class="text-xs text-gray-500">{{ $attr->domains->count() }} opciones</span>
                         </div>
@@ -223,9 +243,9 @@ $attributeIcons = [
                             @foreach($attr->domains as $domain)
                                 <div class="flex items-start space-x-2 text-sm">
                                     <span class="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-700 flex-shrink-0 w-16">
-                                        {{ $domain->codigo }}
+                                        {{ $domain->code }}
                                     </span>
-                                    <span class="text-gray-600">{{ $domain->etiqueta }}</span>
+                                    <span class="text-gray-600">{{ $domain->label }}</span>
                                 </div>
                             @endforeach
                         </div>

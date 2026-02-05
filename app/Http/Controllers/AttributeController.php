@@ -21,7 +21,7 @@ class AttributeController extends Controller
      */
     public function show($codigo)
     {
-        $attribute = Attribute::where('codigo', $codigo)->with('domains')->firstOrFail();
+        $attribute = Attribute::where('code', $codigo)->with('domains')->firstOrFail();
         return view('catalog.attributes.show', compact('attribute'));
     }
 
@@ -38,7 +38,7 @@ class AttributeController extends Controller
      */
     public function apiShow($codigo)
     {
-        $attribute = Attribute::where('codigo', $codigo)->with('domains')->firstOrFail();
+        $attribute = Attribute::where('code', $codigo)->with('domains')->firstOrFail();
         return response()->json($attribute);
     }
 }

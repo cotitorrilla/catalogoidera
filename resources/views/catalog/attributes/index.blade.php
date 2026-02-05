@@ -37,11 +37,11 @@
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-mono text-sm font-semibold text-idera-blue bg-idera-light px-2 py-1 rounded">
-                                        {{ $attribute->codigo }}
+                                        {{ $attribute->code }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="font-medium text-gray-800">{{ $attribute->nombre }}</span>
+                                    <span class="font-medium text-gray-800">{{ $attribute->name }}</span>
                                 </td>
                                 <td class="px-6 py-4 hidden md:table-cell">
                                     <p class="text-sm text-gray-600 line-clamp-2 max-w-md">
@@ -67,7 +67,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <a href="{{ route('attributes.show', $attribute->codigo) }}"
+                                    <a href="{{ route('attributes.show', $attribute->code) }}"
                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-idera-blue bg-idera-light hover:bg-idera-blue hover:text-white transition">
                                         Ver detalle
                                     </a>

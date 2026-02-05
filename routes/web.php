@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CatalogObjectController;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\JsonController;
 
 Route::get('/', function () {
     return redirect()->route('classes.index');
@@ -20,3 +21,7 @@ Route::get('/objetos/{codigo}', [CatalogObjectController::class, 'show'])->name(
 // Rutas para Atributos
 Route::get('/atributos', [AttributeController::class, 'index'])->name('attributes.index');
 Route::get('/atributos/{codigo}', [AttributeController::class, 'show'])->name('attributes.show');
+
+// Rutas JSON
+Route::get('/json/atributos', [JsonController::class, 'atributos'])->name('json.atributos');
+Route::get('/json/catalogo', [JsonController::class, 'catalogo'])->name('json.catalogo');

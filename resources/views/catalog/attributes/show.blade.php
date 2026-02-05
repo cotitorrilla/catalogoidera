@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', $attribute->nombre . ' (' . $attribute->codigo . ') - IDERA')
+@section('title', $attribute->name . ' (' . $attribute->code . ') - IDERA')
 
 @php
 $breadcrumbs = [
     ['label' => 'Atributos', 'url' => route('attributes.index')],
-    ['label' => $attribute->codigo]
+    ['label' => $attribute->code]
 ];
 @endphp
 
@@ -16,12 +16,12 @@ $breadcrumbs = [
         <div class="bg-idera-blue px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-white">{{ $attribute->nombre }}</h1>
+                    <h1 class="text-2xl font-bold text-white">{{ $attribute->name }}</h1>
                     <p class="text-gray-300 text-sm mt-1">Detalle del atributo</p>
                 </div>
                 <div class="bg-white/10 rounded-lg px-4 py-2">
                     <span class="text-xs text-gray-300 block">Código</span>
-                    <span class="text-2xl font-mono font-bold text-white">{{ $attribute->codigo }}</span>
+                    <span class="text-2xl font-mono font-bold text-white">{{ $attribute->code }}</span>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@ $breadcrumbs = [
                 <!-- Código -->
                 <div class="bg-gray-50 rounded-lg p-4">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Código</span>
-                    <p class="mt-2 text-lg font-mono font-semibold text-gray-800">{{ $attribute->codigo }}</p>
+                    <p class="mt-2 text-lg font-mono font-semibold text-gray-800">{{ $attribute->code }}</p>
                 </div>
 
                 <!-- Tipo -->
@@ -78,11 +78,11 @@ $breadcrumbs = [
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-mono text-sm font-semibold text-idera-blue bg-idera-light px-2 py-1 rounded">
-                                        {{ $domain->codigo }}
+                                        {{ $domain->code }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="text-gray-800">{{ $domain->etiqueta }}</span>
+                                    <span class="text-gray-800">{{ $domain->label }}</span>
                                 </td>
                             </tr>
                         @endforeach

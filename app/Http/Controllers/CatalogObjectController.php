@@ -12,7 +12,7 @@ class CatalogObjectController extends Controller
      */
     public function show($codigo)
     {
-        $objeto = CatalogObject::where('codigo', $codigo)
+        $objeto = CatalogObject::where('code', $codigo)
             ->with(['subcategory.catalogClass', 'attributes.domains'])
             ->firstOrFail();
 
@@ -25,29 +25,29 @@ class CatalogObjectController extends Controller
      */
     public function apiShow($codigo)
     {
-        $objeto = CatalogObject::where('codigo', $codigo)
+        $objeto = CatalogObject::where('code', $codigo)
             ->with(['subcategory.catalogClass', 'attributes.domains'])
             ->firstOrFail();
 
         return response()->json([
             'metadata' => [
-                'nombre' => $objeto->nombre,
-                'codigo' => $objeto->codigo,
-                'geometria' => $objeto->geometria,
-                'definicion' => $objeto->definicion,
-                'ruta' => $objeto->subcategory->catalogClass->nombre . ' > ' . $objeto->subcategory->nombre
+                'name' => $objeto->name,
+                'code' => $objeto->code,
+                'geometry' => $objeto->geometry,
+                'definition' => $objeto->definition,
+                'ruta' => $objeto->subcategory->catalogClass->name . ' > ' . $objeto->subcategory->name
             ],
             'atributos' => $objeto->attributes->map(function($attr) {
                 return [
-                    'codigo' => $attr->codigo,
-                    'nombre' => $attr->nombre,
-                    'tipo' => $attr->tipo,
-                    'definicion' => $attr->definicion,
+                    'code' => $attr->code,
+                    'name' => $attr->name,
+                    'type' => $attr->type,
+                    'definition' => $attr->definition,
                     'es_seleccion' => $attr->domains->count() > 0,
                     'opciones' => $attr->domains->map(function($dom) {
                         return [
-                            'valor' => $dom->codigo,
-                            'texto' => $dom->etiqueta
+                            'valor' => $dom->code,
+                            'texto' => $dom->label
                         ];
                     })
                 ];
@@ -55,3 +55,4 @@ class CatalogObjectController extends Controller
         ]);
     }
 }
+
