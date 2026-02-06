@@ -1,4 +1,4 @@
-git add@extends('layouts.master')
+@extends('layouts.master')
 
 @section('title', $class->name . ' - Subcategorías - IDERA')
 

@@ -59,7 +59,7 @@ $classIcons = [
 <div class="max-w-6xl mx-auto">
     <div class="text-center mb-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Catálogo de Objetos Geográficos</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">Explore las clases de objetos geográficos definidos por IDERA. Cada clase contiene subcategorías que agrupan objetos geográficos relacionados.</p>
+        <p class="text-gray-600 max-w-2xl mx-auto">Explore las clases de objetos geográficos definidos por la comunidad IDERA. Cada clase contiene subcategorías que agrupan objetos geográficos relacionados.</p>
     </div>
 
     @if($classes->isEmpty())
@@ -88,7 +88,7 @@ $classIcons = [
                             <h2 class="text-xl font-semibold text-gray-800 mb-2 group-hover:{{ $colors['text'] }} transition-colors">
                                 {{ $class->name }}
                             </h2>
-                            <p class="text-gray-600 text-sm line-clamp-3">
+                            <p class="text-gray-600 text-sm">
                                 {{ $class->content }}
                             </p>
                             <div class="mt-4 flex items-center {{ $colors['text'] }} text-sm font-medium">

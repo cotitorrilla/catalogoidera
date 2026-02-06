@@ -33,12 +33,14 @@
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <a href="{{ route('classes.index') }}" class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                        <span class="text-idera-blue font-bold text-xl">ID</span>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-gray-200">
+                        <!-- Logo del organismo - reemplazar src con la ruta del logo real -->
+                        <img src="" alt="Logo del organismo" class="w-full h-full object-cover hidden" id="organism-logo">
+                        <span class="text-idera-blue font-bold text-xl" id="logo-placeholder">ID</span>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold">Catálogo de Objetos Geográficos</h1>
-                        <p class="text-sm text-gray-300">Infraestrutura de Datos Espaciales de la República Argentina</p>
+                        <h1 class="text-xl font-bold">NOMBRE DEL ORGANISMO</h1>
+                        <p class="text-sm text-gray-300">Placeholder subtítulo del organismo</p>
                     </div>
                 </a>
                 <nav class="hidden md:flex space-x-6">

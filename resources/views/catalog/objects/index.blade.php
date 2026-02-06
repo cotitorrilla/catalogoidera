@@ -51,10 +51,40 @@ $colors = $classColors[$subcategory->catalogClass->code] ?? $classColors[1];
  * Ayudan a identificar visualmente el tipo de geometría de cada objeto.
  */
 $geometryIcons = [
-    'Punto' => '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>',
-    'Línea' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 17L19 7M5 7l14 10"/></svg>',
-    'Polígono' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>',
+    'Punto' => '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>',
+    'Línea' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 12h16"/></svg>',
+    'Polígono' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1" stroke-width="2"/></svg>',
 ];
+
+/**
+ * Colores para cada tipo de geometría.
+ * Se utiliza para mostrar múltiples pills cuando un objeto tiene varias geometrías.
+ */
+$geometryColors = [
+    'Punto' => 'bg-green-100 text-green-800 border-green-200',
+    'Línea' => 'bg-blue-100 text-blue-800 border-blue-200',
+    'Polígono' => 'bg-purple-100 text-purple-800 border-purple-200',
+];
+
+/**
+ * Genera múltiples pills para objetos con geometrías múltiples.
+ * @param string $geometry La geometría del objeto (ej: "Punto", "Polígono", "Punto/Polígono")
+ * @return string HTML con las pills correspondientes
+ */
+function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
+    $geometryTypes = ['Punto', 'Línea', 'Polígono'];
+    $pills = [];
+    
+    foreach ($geometryTypes as $type) {
+        if (strpos($geometry, $type) !== false) {
+            $icon = $geometryIcons[$type] ?? '';
+            $colorClass = $geometryColors[$type] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+            $pills[] = '<span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full border ' . $colorClass . '">' . $icon . $type . '</span>';
+        }
+    }
+    
+    return implode(' ', $pills);
+}
 @endphp
 
 @section('content')
@@ -113,30 +143,8 @@ $geometryIcons = [
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
-                                        $geoColors = [
-                                            'Punto' => 'bg-green-100 text-green-800 border-green-200',
-                                            'Línea' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                            'Polígono' => 'bg-purple-100 text-purple-800 border-purple-200',
-                                        ];
-                                        $geoClass = 'bg-gray-100 text-gray-800 border-gray-200';
-                                        foreach ($geoColors as $key => $color) {
-                                            if (strpos($object->geometry, $key) !== false) {
-                                                $geoClass = $color;
-                                                break;
-                                            }
-                                        }
-                                        $geoIcon = '';
-                                        foreach ($geometryIcons as $key => $icon) {
-                                            if (strpos($object->geometry, $key) !== false) {
-                                                $geoIcon = $icon;
-                                                break;
-                                            }
-                                        }
+                                        echo generateGeometryPills($object->geometry, $geometryIcons, $geometryColors);
                                     @endphp
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full border {{ $geoClass }}">
-                                        {!! $geoIcon !!}
-                                        {{ $object->geometry }}
-                                    </span>
                                 </td>
                                 <td class="px-6 py-4 hidden lg:table-cell">
                                     <p class="text-sm text-gray-600 line-clamp-2 max-w-md">

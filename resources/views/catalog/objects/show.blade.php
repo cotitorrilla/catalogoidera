@@ -55,10 +55,40 @@ $colors = $classColors[$objeto->subcategory->catalogClass->code] ?? $classColors
  * Representan visualmente el tipo de geometría del objeto.
  */
 $geometryIcons = [
-    'Punto' => '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>',
-    'Línea' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 17L19 7"/></svg>',
-    'Polígono' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>',
+    'Punto' => '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="8" cy="16" r="3"/><circle cx="12" cy="12" r="3"/></svg>',
+    'Línea' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6l12 0M6 18l12 0M12 12l0 6M6 6l0 12M18 6l0 12M18 18l-12 0"/></svg>',
+    'Polígono' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="4" cy="4" r="2"/><circle cx="20" cy="4" r="2"/><circle cx="20" cy="20" r="2"/><circle cx="4" cy="20" r="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4l16 0M4 20l16 0M4 4l0 16M20 4l0 16M4 4l8 8M20 20l-8-8"/></svg>',
 ];
+
+/**
+ * Colores para cada tipo de geometría.
+ * Se utiliza para mostrar múltiples pills cuando un objeto tiene varias geometrías.
+ */
+$geometryColors = [
+    'Punto' => 'bg-green-100 text-green-800 border-green-200',
+    'Línea' => 'bg-blue-100 text-blue-800 border-blue-200',
+    'Polígono' => 'bg-purple-100 text-purple-800 border-purple-200',
+];
+
+/**
+ * Genera múltiples pills para objetos con geometrías múltiples.
+ * @param string $geometry La geometría del objeto (ej: "Punto", "Polígono", "Punto/Polígono")
+ * @return string HTML con las pills correspondientes
+ */
+function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
+    $geometryTypes = ['Punto', 'Línea', 'Polígono'];
+    $pills = [];
+    
+    foreach ($geometryTypes as $type) {
+        if (strpos($geometry, $type) !== false) {
+            $icon = $geometryIcons[$type] ?? '';
+            $colorClass = $geometryColors[$type] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+            $pills[] = '<span class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium rounded-full border ' . $colorClass . '">' . $icon . $type . '</span>';
+        }
+    }
+    
+    return implode(' ', $pills);
+}
 
 /**
  * Iconos según el tipo de atributo.
@@ -97,33 +127,8 @@ $attributeIcons = [
                 <div class="bg-gray-50 rounded-lg p-4">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Geometría</span>
                     @php
-                        // Colores para cada tipo de geometría
-                        $geoColors = [
-                            'Punto' => 'bg-green-100 text-green-800 border-green-200',
-                            'Línea' => 'bg-blue-100 text-blue-800 border-blue-200',
-                            'Polígono' => 'bg-purple-100 text-purple-800 border-purple-200',
-                        ];
-                        $geoClass = 'bg-gray-100 text-gray-800 border-gray-200';
-                        $geoIcon = '';
-                        
-                        // Buscar coincidencia de geometría
-                        foreach ($geoColors as $key => $color) {
-                            if (strpos($objeto->geometry, $key) !== false) {
-                                $geoClass = $color;
-                                break;
-                            }
-                        }
-                        foreach ($geometryIcons as $key => $icon) {
-                            if (strpos($objeto->geometry, $key) !== false) {
-                                $geoIcon = $icon;
-                                break;
-                            }
-                        }
+                        echo generateGeometryPills($objeto->geometry, $geometryIcons, $geometryColors);
                     @endphp
-                    <span class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border {{ $geoClass }}">
-                        {!! $geoIcon !!}
-                        {{ $objeto->geometry }}
-                    </span>
                 </div>
 
                 <!-- Sección del código -->
