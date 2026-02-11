@@ -1,25 +1,8 @@
 @extends('layouts.master')
 
-@section('title', 'Clases del Catálogo - IDERA')
+@section('title', 'Catálogo de Objetos Geográficos IDERA')
 
 @php
-/**
- * Configuración de colores para cada clase del catálogo.
- * Cada clase tiene su propio color distintivo para identificación visual.
- * Colores según especificación IDERA:
- * - Amarillo para Industria y Servicios
- * - Rojo para Infraestructura Social
- * - Naranja para Transporte
- * - Turqueza para Hidrografía y Oceanografía
- * - Marrón para Geografía Física
- * - Verde para Biota
- * - Gris para Demarcación
- * - Violeta para Defensa y Seguridad
- * - Celeste para Clima y Meteorología
- * - Salmón para Catastro
- * - Verde agua para Unidades Geoestadísticas
- * - Violeta/Púrpura para Abstracto
- */
 $classColors = [
     1  => ['bg' => 'bg-yellow-500', 'bg-light' => 'bg-yellow-100', 'text' => 'text-yellow-600', 'border' => 'border-yellow-500', 'hex' => '#eab308'],
     2  => ['bg' => 'bg-red-500',    'bg-light' => 'bg-red-100',    'text' => 'text-red-600',    'border' => 'border-red-500',    'hex' => '#ef4444'],
@@ -35,10 +18,6 @@ $classColors = [
     23 => ['bg' => 'bg-purple-500', 'bg-light' => 'bg-purple-100', 'text' => 'text-purple-600', 'border' => 'border-purple-500', 'hex' => '#a855f7'],
 ];
 
-/**
- * Iconos asociados a cada clase del catálogo.
- * Representan visualmente el tipo de objetos geográficos de cada clase.
- */
 $classIcons = [
     1  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
     2  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',

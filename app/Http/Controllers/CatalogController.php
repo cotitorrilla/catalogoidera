@@ -15,7 +15,7 @@ class CatalogController extends Controller
     public function index()
     {
         $classes = CatalogClass::with('subcategories')->get();
-        return view('catalog.classes.index', compact('classes'));
+        return view('catalog.classes.list', compact('classes'));
     }
 
     /**
@@ -24,7 +24,7 @@ class CatalogController extends Controller
     public function subcategories(CatalogClass $class)
     {
         $class->load('subcategories.objects');
-        return view('catalog.subcategories.show', compact('class'));
+        return view('catalog.classes.subcategories', compact('class'));
     }
 
     /**
@@ -33,7 +33,7 @@ class CatalogController extends Controller
     public function objects(Subcategory $subcategory)
     {
         $subcategory->load('objects', 'catalogClass');
-        return view('catalog.objects.index', compact('subcategory'));
+        return view('catalog.subcategories.objects', compact('subcategory'));
     }
 
     /**

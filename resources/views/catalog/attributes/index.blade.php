@@ -4,9 +4,18 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-10">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Atributos del Catálogo</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">Lista completa de atributos definidos en el catálogo de objetos geográficos de IDERA. Cada atributo puede tener un dominio de valores permitidos.</p>
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Atributos del Catálogo</h1>
+            <p class="text-gray-600">Lista completa de atributos definidos en el catálogo de objetos geográficos de IDERA.</p>
+        </div>
+        <a href="{{ route('attributes.create') }}" 
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-idera-blue rounded-lg hover:bg-blue-800 transition">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuevo Atributo
+        </a>
     </div>
 
     @if($attributes->isEmpty())

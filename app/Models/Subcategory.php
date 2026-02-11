@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subcategory extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = ['class_id','code','name','content'];
+    protected $dates = ['deleted_at'];
 
     /**
      * Relación: Una subcategoría pertenece a una clase.

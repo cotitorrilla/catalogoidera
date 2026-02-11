@@ -16,7 +16,7 @@ class CatalogObjectController extends Controller
             ->with(['subcategory.catalogClass', 'attributes.domains'])
             ->firstOrFail();
 
-        return view('catalog.objects.show', compact('objeto'));
+        return view('catalog.objects.detail', compact('objeto'));
     }
 
     /**
