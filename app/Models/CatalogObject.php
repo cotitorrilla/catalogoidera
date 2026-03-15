@@ -3,16 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CatalogObject extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'objects';
     protected $fillable = ['subcategory_id','code','name','geometry','definition'];
+    protected $dates = ['deleted_at'];
 
+    /**
+     * Relación: Un objeto pertenece a una subcategoría.
+     */
     public function subcategory() {
         return $this->belongsTo(Subcategory::class);
     }
 
+    /**
+     * Relación: Un objeto tiene muchos atributos (relación N:M).
+     */
     public function attributes() {
         return $this->belongsToMany(
             Attribute::class,   // modelo relacionado

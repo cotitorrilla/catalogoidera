@@ -1,11 +1,125 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* Paleta de Colores IDERA por Clase */
+:root {
+    /* Colores Primarios IDERA */
+    --idera-blue: #1e3a5f;
+    --idera-light: #e8f0f8;
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Colores de la Clase 1: Industria y Servicios */
+    --class-1-industry: #f97316;  /* Naranja/Ámbar */
+    --class-1-industry-light: #ffedd5;
+    --class-1-industry-dark: #ea580c;
+
+    /* Colores de la Clase 2: Infraestructura Social */
+    --class-2-social: #10b981;    /* Verde Esmeralda */
+    --class-2-social-light: #d1fae5;
+    --class-2-social-dark: #059669;
+
+    /* Colores de la Clase 3: Transporte */
+    --class-3-transport: #ef4444; /* Rojo/Coral */
+    --class-3-transport-light: #fee2e2;
+    --class-3-transport-dark: #dc2626;
+
+    /* Colores de la Clase 4: Hidrografía y Oceanografía */
+    --class-4-hydro: #06b6d4;     /* Azul Cyan */
+    --class-4-hydro-light: #cffafe;
+    --class-4-hydro-dark: #0891b2;
+
+    /* Colores de la Clase 5: Geografía Física */
+    --class-5-physical: #8b5cf6;  /* Violeta */
+    --class-5-physical-light: #ede9fe;
+    --class-5-physical-dark: #7c3aed;
+}
+
+/* Clases utility específicas por clase */
+.bg-class-1 { background-color: var(--class-1-industry); }
+.bg-class-1-light { background-color: var(--class-1-industry-light); }
+.text-class-1 { color: var(--class-1-industry); }
+.border-class-1 { border-color: var(--class-1-industry); }
+
+.bg-class-2 { background-color: var(--class-2-social); }
+.bg-class-2-light { background-color: var(--class-2-social-light); }
+.text-class-2 { color: var(--class-2-social); }
+.border-class-2 { border-color: var(--class-2-social); }
+
+.bg-class-3 { background-color: var(--class-3-transport); }
+.bg-class-3-light { background-color: var(--class-3-transport-light); }
+.text-class-3 { color: var(--class-3-transport); }
+.border-class-3 { border-color: var(--class-3-transport); }
+
+.bg-class-4 { background-color: var(--class-4-hydro); }
+.bg-class-4-light { background-color: var(--class-4-hydro-light); }
+.text-class-4 { color: var(--class-4-hydro); }
+.border-class-4 { border-color: var(--class-4-hydro); }
+
+.bg-class-5 { background-color: var(--class-5-physical); }
+.bg-class-5-light { background-color: var(--class-5-physical-light); }
+.text-class-5 { color: var(--class-5-physical); }
+.border-class-5 { border-color: var(--class-5-physical); }
+
+/* Colores para tipos de geometría */
+.geometry-point { background-color: #dcfce7; color: #166534; }
+.geometry-line { background-color: #dbeafe; color: #1e40af; }
+.geometry-polygon { background-color: #f3e8ff; color: #7c3aed; }
+
+/* Estilos de iconos */
+.class-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subcategory-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efectos hover para tarjetas */
+.card-obj {
+    transition: all 0.2s ease-in-out;
+}
+
+.card-obj:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de insignias */
+.badge-class {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.375rem;
+}
+
+/* Mejoras para tablas */
+.object-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.object-table td {
+    vertical-align: middle;
+}
+
+.object-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.object-table tbody tr:hover {
+    background-color: #f8fafc;
 }

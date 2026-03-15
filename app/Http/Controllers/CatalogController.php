@@ -4,27 +4,61 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogClass;
 use App\Models\Subcategory;
+use App\Models\CatalogObject;
 use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    // 1. Listar todas las Clases (Industria, Infraestructura, etc.)
+    /**
+     * Muestra la lista de todas las clases del catálogo.
+     */
+    public function index()
+    {
+        $classes = CatalogClass::with('subcategories')->get();
+        return view('catalog.classes.list', compact('classes'));
+    }
+
+    /**
+     * Muestra las subcategorías de una clase específica.
+     */
+    public function subcategories(CatalogClass $class)
+    {
+        $class->load('subcategories.objects');
+        return view('catalog.classes.subcategories', compact('class'));
+    }
+
+    /**
+     * Muestra los objetos de una subcategoría específica.
+     */
+    public function objects(Subcategory $subcategory)
+    {
+        $subcategory->load('objects', 'catalogClass');
+        return view('catalog.subcategories.objects', compact('subcategory'));
+    }
+
+    /**
+     * API: Devuelve todas las clases en formato JSON.
+     */
     public function getClasses()
     {
         return response()->json(CatalogClass::all());
     }
 
-    // 2. Listar Subcategorías de una Clase específica
+    /**
+     * API: Devuelve las subcategorías de una clase específica.
+     */
     public function getSubcategories($classId)
     {
         $subcategories = Subcategory::where('catalog_class_id', $classId)->get();
         return response()->json($subcategories);
     }
 
-    // 3. Listar Objetos de una Subcategoría específica
+    /**
+     * API: Devuelve los objetos de una subcategoría específica.
+     */
     public function getObjectsBySubcategory($subcategoryId)
     {
-        $objects = \App\Models\CatalogObject::where('subcategory_id', $subcategoryId)->get();
+        $objects = CatalogObject::where('subcategory_id', $subcategoryId)->get();
         return response()->json($objects);
     }
 }

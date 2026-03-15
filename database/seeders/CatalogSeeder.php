@@ -14,7 +14,18 @@ class CatalogSeeder extends Seeder
     public function run(): void
     {
         $path = database_path('data/catalogo-objetos-2025.json');
+        
+        if (!File::exists($path)) {
+            $this->command->error("Archivo no encontrado: {$path}");
+            return;
+        }
+        
         $classes = json_decode(File::get($path), true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->command->error("Error JSON: " . json_last_error_msg());
+            return;
+        }
 
         foreach ($classes as $classRow) {
             $class = CatalogClass::updateOrCreate(
@@ -60,3 +71,4 @@ class CatalogSeeder extends Seeder
         }
     }
 }
+
