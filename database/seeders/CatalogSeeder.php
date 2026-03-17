@@ -57,14 +57,16 @@ class CatalogSeeder extends Seeder
                     );
 
                     // Pivot Objeto-Atributos a partir de la lista dentro del objeto
-                    $obj->attributes()->detach();
+                    $attributeData = [];
                     foreach (($objRow['atributos'] ?? []) as $attRef) {
                         $att = Attribute::where('code', trim($attRef['codigo']))->first();
                         if ($att) {
-                            $obj->attributes()->syncWithoutDetaching([
-                                $att->id => ['display_name' => $attRef['denominacion'] ?? null]
-                            ]);
+                            $attributeData[$att->id] = ['display_name' => $attRef['denominacion'] ?? null];
                         }
+                    }
+                    // sync reemplaza todos los atributos del objeto con los nuevos
+                    if (!empty($attributeData)) {
+                        $obj->attributes()->sync($attributeData);
                     }
                 }
             }

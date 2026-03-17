@@ -12,45 +12,9 @@ $breadcrumbs = [
     ['label' => $subcategory->name]
 ];
 
-$colors = $classColors[$subcategory->catalogClass->code] ?? $classColors[1];
-
-/**
- * Iconos para cada tipo de geometría.
- * Ayudan a identificar visualmente el tipo de geometría de cada objeto.
- */
-$geometryIcons = [
-    'Punto' => '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>',
-    'Línea' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 12h16"/></svg>',
-    'Polígono' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1" stroke-width="2"/></svg>',
-];
-
-/**
- * Colores para cada tipo de geometría.
- * Se utiliza para mostrar múltiples pills cuando un objeto tiene varias geometrías.
- */
-$geometryColors = [
-    'Punto' => 'bg-green-100 text-green-800 border-green-200',
-    'Línea' => 'bg-blue-100 text-blue-800 border-blue-200',
-    'Polígono' => 'bg-purple-100 text-purple-800 border-purple-200',
-];
-
-/**
- * Genera múltiples pills para objetos con geometrías múltiples.
- */
-function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
-    $geometryTypes = ['Punto', 'Línea', 'Polígono'];
-    $pills = [];
-    
-    foreach ($geometryTypes as $type) {
-        if (strpos($geometry, $type) !== false) {
-            $icon = $geometryIcons[$type] ?? '';
-            $colorClass = $geometryColors[$type] ?? 'bg-gray-100 text-gray-800 border-gray-200';
-            $pills[] = '<span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full border ' . $colorClass . '">' . $icon . $type . '</span>';
-        }
-    }
-    
-    return implode(' ', $pills);
-}
+// Obtener colores desde el modelo de la clase
+$colors = $subcategory->catalogClass->getColors();
+$baseColor = $subcategory->catalogClass->getBaseColor();
 @endphp
 
 @section('content')
@@ -68,7 +32,7 @@ function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
                 </div>
             </div>
             <a href="{{ route('objects.create', ['subcategory' => $subcategory->id]) }}" 
-               class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-{{ explode('-', $colors['bg'])[1] }}-500 rounded-lg hover:bg-{{ explode('-', $colors['bg'])[1] }}-600 transition">
+               class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-{{ $baseColor }}-500 rounded-lg hover:bg-{{ $baseColor }}-600 transition">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -117,9 +81,7 @@ function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
                                     </a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @php
-                                        echo generateGeometryPills($object->geometry, $geometryIcons, $geometryColors);
-                                    @endphp
+                                    {!! generateGeometryPills($object->geometry) !!}
                                 </td>
                                 <td class="px-6 py-4 hidden lg:table-cell">
                                     <p class="text-sm text-gray-600 line-clamp-2 max-w-md">
@@ -151,7 +113,7 @@ function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
             </svg>
             Volver a {{ $subcategory->catalogClass->name }}
         </a>
-        <a href="{{ route('classes.index') }}" class="flex items-center text-gray-600 hover:text-idera-blue transition">
+        <a href="{{ route('home') }}" class="flex items-center text-gray-600 hover:text-idera-blue transition">
             Volver al inicio
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -159,5 +121,7 @@ function generateGeometryPills($geometry, $geometryIcons, $geometryColors) {
         </a>
     </div>
 </div>
+
+
 @endsection
 

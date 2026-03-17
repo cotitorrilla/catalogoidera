@@ -4,8 +4,8 @@
 
 @php
 $breadcrumbs = [
-    ['label' => 'Clases', 'url' => route('classes.index')],
-    ['label' => $class->name, 'url' => route('classes.index')],
+    ['label' => 'Clases', 'url' => route('home')],
+    ['label' => $class->name, 'url' => route('home')],
     ['label' => 'Editar']
 ];
 @endphp
@@ -73,7 +73,7 @@ $breadcrumbs = [
                 </button>
 
                 <div class="flex space-x-3">
-                    <a href="{{ route('classes.index') }}" 
+                    <a href="{{ route('home') }}"
                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Cancelar
                     </a>

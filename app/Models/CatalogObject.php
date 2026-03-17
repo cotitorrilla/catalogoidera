@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\RecordsActivity;
 
 class CatalogObject extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RecordsActivity;
     
     protected $table = 'objects';
-    protected $fillable = ['subcategory_id','code','name','geometry','definition'];
+    protected $fillable = ['subcategory_id','code','name','geometry','definition','created_by','updated_by'];
     protected $dates = ['deleted_at'];
 
     /**

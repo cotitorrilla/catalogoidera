@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CatalogClass;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreClassRequest;
+use App\Http\Requests\UpdateClassRequest;
 
 class ClassController extends Controller
 {
@@ -27,13 +28,9 @@ class ClassController extends Controller
     /**
      * Guarda una nueva clase.
      */
-    public function store(Request $request)
+    public function store(StoreClassRequest $request)
     {
-        $validated = $request->validate([
-            'code' => 'required|unique:classes|max:10',
-            'name' => 'required|max:255',
-            'content' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         CatalogClass::create($validated);
 
@@ -52,13 +49,9 @@ class ClassController extends Controller
     /**
      * Actualiza una clase.
      */
-    public function update(Request $request, CatalogClass $class)
+    public function update(UpdateClassRequest $request, CatalogClass $class)
     {
-        $validated = $request->validate([
-            'code' => 'required|max:10|unique:classes,code,' . $class->id,
-            'name' => 'required|max:255',
-            'content' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         $class->update($validated);
 

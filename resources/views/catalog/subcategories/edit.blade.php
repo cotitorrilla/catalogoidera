@@ -4,7 +4,7 @@
 
 @php
 $breadcrumbs = [
-    ['label' => 'Clases', 'url' => route('classes.index')],
+    ['label' => 'Clases', 'url' => route('home')],
     ['label' => $subcategory->catalogClass->name, 'url' => route('subcategories.show', $subcategory->catalogClass)],
     ['label' => $subcategory->name],
     ['label' => 'Editar']

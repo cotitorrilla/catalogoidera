@@ -3,21 +3,7 @@
 @section('title', 'Catálogo de Objetos Geográficos IDERA')
 
 @php
-$classColors = [
-    1  => ['bg' => 'bg-yellow-500', 'bg-light' => 'bg-yellow-100', 'text' => 'text-yellow-600', 'border' => 'border-yellow-500', 'hex' => '#eab308'],
-    2  => ['bg' => 'bg-red-500',    'bg-light' => 'bg-red-100',    'text' => 'text-red-600',    'border' => 'border-red-500',    'hex' => '#ef4444'],
-    3  => ['bg' => 'bg-orange-500', 'bg-light' => 'bg-orange-100', 'text' => 'text-orange-600', 'border' => 'border-orange-500', 'hex' => '#f97316'],
-    4  => ['bg' => 'bg-teal-500',  'bg-light' => 'bg-teal-100',  'text' => 'text-teal-600',  'border' => 'border-teal-500',  'hex' => '#14b8a6'],
-    5  => ['bg' => 'bg-amber-700',  'bg-light' => 'bg-amber-100',  'text' => 'text-amber-700',  'border' => 'border-amber-700',  'hex' => '#b45309'],
-    6  => ['bg' => 'bg-green-500',  'bg-light' => 'bg-green-100',  'text' => 'text-green-600',  'border' => 'border-green-500',  'hex' => '#22c55e'],
-    7  => ['bg' => 'bg-gray-500',   'bg-light' => 'bg-gray-100',   'text' => 'text-gray-600',   'border' => 'border-gray-500',   'hex' => '#6b7280'],
-    9  => ['bg' => 'bg-violet-500', 'bg-light' => 'bg-violet-100', 'text' => 'text-violet-600', 'border' => 'border-violet-500', 'hex' => '#8b5cf6'],
-    10 => ['bg' => 'bg-sky-500',   'bg-light' => 'bg-sky-100',   'text' => 'text-sky-600',   'border' => 'border-sky-500',   'hex' => '#0ea5e9'],
-    11 => ['bg' => 'bg-rose-500',  'bg-light' => 'bg-rose-100',  'text' => 'text-rose-600',  'border' => 'border-rose-500',  'hex' => '#f43f5e'],
-    12 => ['bg' => 'bg-emerald-500', 'bg-light' => 'bg-emerald-100', 'text' => 'text-emerald-600', 'border' => 'border-emerald-500', 'hex' => '#10b981'],
-    23 => ['bg' => 'bg-purple-500', 'bg-light' => 'bg-purple-100', 'text' => 'text-purple-600', 'border' => 'border-purple-500', 'hex' => '#a855f7'],
-];
-
+// Iconos para cada clase
 $classIcons = [
     1  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
     2  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
@@ -38,7 +24,7 @@ $classIcons = [
 <div class="max-w-6xl mx-auto">
     <div class="text-center mb-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Catálogo de Objetos Geográficos</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">Explore las clases de objetos geográficos definidos por la comunidad IDERA. Cada clase contiene subcategorías que agrupan objetos geográficos relacionados.</p>
+        <p class="text-gray-600 max-w-2xl mx-auto">Explore las clases de objetos geográficos definidos por la comunidad clase contiene subcategorías que agrupan IDERA. Cada objetos geográficos relacionados.</p>
     </div>
 
     @if($classes->isEmpty())
@@ -54,23 +40,32 @@ $classIcons = [
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($classes as $index => $class)
                 @php
-                    $colors = $classColors[$class->code] ?? $classColors[1];
+                    $colors = $class->getColors();
                     $icon = $classIcons[$class->code] ?? $classIcons[1];
                 @endphp
                 <a href="{{ route('subcategories.show', $class) }}"
-                   class="card-obj bg-white rounded-xl shadow-md border border-gray-100 p-6 transition-all duration-300 hover:border-{{ $colors['text'] }} group">
+                   class="card-obj bg-white rounded-xl shadow-md border border-gray-100 p-6 transition-all duration-300 group"
+                   style="border-color: {{ $colors['hex'] }}"
+                   onmouseover="this.style.borderColor='{{ $colors['hex'] }}'"
+                   onmouseout="this.style.borderColor='#f3f4f6'">
                     <div class="flex items-start space-x-4">
                         <div class="w-12 h-12 rounded-lg {{ $colors['bg'] }} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
                             <span class="text-white font-bold text-lg">{{ $class->code }}</span>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h2 class="text-xl font-semibold text-gray-800 mb-2 group-hover:{{ $colors['text'] }} transition-colors">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-2 transition-colors"
+                                style="color: {{ $colors['hex'] }}"
+                                onmouseover="this.style.color='{{ $colors['hex'] }}'"
+                                onmouseout="this.style.color='#1f2937'">
                                 {{ $class->name }}
                             </h2>
                             <p class="text-gray-600 text-sm">
                                 {{ $class->content }}
                             </p>
-                            <div class="mt-4 flex items-center {{ $colors['text'] }} text-sm font-medium">
+                            <div class="mt-4 flex items-center text-sm font-medium"
+                                style="color: {{ $colors['hex'] }}"
+                                onmouseover="this.style.color='{{ $colors['hex'] }}'"
+                                onmouseout="this.style.color='#6b7280'">
                                 <span>{{ $class->subcategories->count() }} subcategorías</span>
                                 <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

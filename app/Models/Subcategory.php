@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\RecordsActivity;
 
 class Subcategory extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RecordsActivity;
     
-    protected $fillable = ['class_id','code','name','content'];
+    protected $fillable = ['class_id','code','name','content','created_by','updated_by'];
     protected $dates = ['deleted_at'];
 
     /**

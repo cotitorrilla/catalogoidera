@@ -4,9 +4,9 @@
 
 @php
 $breadcrumbs = [
-    ['label' => 'Clases', 'url' => route('classes.index')],
+    ['label' => 'Clases', 'url' => route('home')],
     ['label' => $object->subcategory->catalogClass->name, 'url' => route('subcategories.show', $object->subcategory->catalogClass)],
-    ['label' => $object->subcategory->name, 'url' => route('objects.index', $object->subcategory)],
+    ['label' => $object->subcategory->name, 'url' => route('subcategories.objects.index', $object->subcategory)],
     ['label' => $object->name],
     ['label' => 'Editar']
 ];
@@ -126,7 +126,7 @@ $breadcrumbs = [
                 </button>
 
                 <div class="flex space-x-3">
-                    <a href="{{ route('objects.index', $object->subcategory) }}" 
+                    <a href="{{ route('subcategories.objects.index', $object->subcategory) }}"
                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Cancelar
                     </a>

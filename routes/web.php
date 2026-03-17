@@ -1,87 +1,118 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubcategoryController;
-use App\Http\Controllers\ObjectController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AttributeController;
-use App\Http\Controllers\JsonController;
+use App\Http\Controllers\ObjectController;
+use App\Http\Controllers\ClassController;
+use App\Models\CatalogClass;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Rutas del Catálogo de Objetos Geográficos IDERA
-|--------------------------------------------------------------------------
-*/
-
-// Página de inicio
 Route::get('/', function () {
-    return redirect()->route('classes.index');
+    $classes = CatalogClass::with('subcategories')->get();
+    return view('home', compact('classes'));
+})->name('home');
+
+Route::get('/clases', [CatalogController::class, 'index'])
+    ->name('classes.index');
+
+// Rutas públicas - solo visualización
+Route::get('/clase/{class}/subcategorias', [SubcategoryController::class, 'show'])
+    ->name('subcategories.show');
+
+Route::get('/subcategoria/{subcategory}/objetos', [ObjectController::class, 'index'])
+    ->name('subcategories.objects.index');
+
+Route::get('/objetos', [ObjectController::class, 'index'])
+    ->name('objects.index');
+
+Route::get('/atributos', [AttributeController::class, 'index'])
+    ->name('attributes.index');
+
+Route::get('/atributos/{attribute}', [AttributeController::class, 'show'])
+    ->name('attributes.show');
+
+Route::get('/objeto/{codigo}', [ObjectController::class, 'show'])
+    ->name('objects.show');
+
+// Rutas protegidas - requieren autenticación
+Route::middleware(['auth'])->group(function () {
+    // Clases - CRUD
+    Route::get('/clases/crear', [ClassController::class, 'create'])
+        ->name('classes.create');
+
+    Route::post('/clases', [ClassController::class, 'store'])
+        ->name('classes.store');
+
+    Route::get('/clase/{class}/editar', [ClassController::class, 'edit'])
+        ->name('classes.edit');
+
+    Route::put('/clase/{class}', [ClassController::class, 'update'])
+        ->name('classes.update');
+
+    Route::delete('/clase/{class}', [ClassController::class, 'destroy'])
+        ->name('classes.destroy');
+
+    // Subcategorías - CRUD
+    Route::get('/clase/{class}/subcategorias/crear', [SubcategoryController::class, 'create'])
+        ->name('subcategories.create');
+
+    Route::post('/subcategorias', [SubcategoryController::class, 'store'])
+        ->name('subcategories.store');
+
+    Route::get('/subcategoria/{subcategory}/editar', [SubcategoryController::class, 'edit'])
+        ->name('subcategories.edit');
+
+    Route::put('/subcategoria/{subcategory}', [SubcategoryController::class, 'update'])
+        ->name('subcategories.update');
+
+    Route::delete('/subcategoria/{subcategory}', [SubcategoryController::class, 'destroy'])
+        ->name('subcategories.destroy');
+
+    // Objetos - CRUD
+    Route::get('/objetos/crear', [ObjectController::class, 'create'])
+        ->name('objects.create');
+
+    Route::post('/objetos', [ObjectController::class, 'store'])
+        ->name('objects.store');
+
+    Route::get('/objeto/{object}/editar', [ObjectController::class, 'edit'])
+        ->name('objects.edit');
+
+    Route::put('/objeto/{object}', [ObjectController::class, 'update'])
+        ->name('objects.update');
+
+    Route::delete('/objeto/{object}', [ObjectController::class, 'destroy'])
+        ->name('objects.destroy');
+
+    // Atributos - CRUD
+    Route::get('/atributos/crear', [AttributeController::class, 'create'])
+        ->name('attributes.create');
+
+    Route::post('/atributos', [AttributeController::class, 'store'])
+        ->name('attributes.store');
+
+    Route::get('/atributos/{attribute}/editar', [AttributeController::class, 'edit'])
+        ->name('attributes.edit');
+
+    Route::put('/atributos/{attribute}', [AttributeController::class, 'update'])
+        ->name('attributes.update');
+
+    Route::delete('/atributos/{attribute}', [AttributeController::class, 'destroy'])
+        ->name('attributes.destroy');
+
+    Route::delete('/atributos/{attribute}/dominios/{domain}', [AttributeController::class, 'destroyDomain'])
+        ->name('attributes.domains.destroy');
+
+    // Dashboard y Perfil
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rutas para Clases
-Route::prefix('clases')->name('classes.')->group(function () {
-    Route::get('/', [ClassController::class, 'index'])->name('index');
-    Route::get('/create', [ClassController::class, 'create'])->name('create');
-    Route::post('/', [ClassController::class, 'store'])->name('store');
-    Route::get('/{class}/edit', [ClassController::class, 'edit'])->name('edit');
-    Route::put('/{class}', [ClassController::class, 'update'])->name('update');
-    Route::delete('/{class}', [ClassController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/restore', [ClassController::class, 'restore'])->name('restore');
-    Route::delete('/{id}/force', [ClassController::class, 'forceDelete'])->name('forceDelete');
-});
-
-// Rutas para Subcategorías
-Route::prefix('subcategorias')->name('subcategories.')->group(function () {
-    Route::get('/', [SubcategoryController::class, 'index'])->name('index');
-    Route::get('/create', [SubcategoryController::class, 'create'])->name('create');
-    Route::post('/', [SubcategoryController::class, 'store'])->name('store');
-    Route::get('/{subcategory}/edit', [SubcategoryController::class, 'edit'])->name('edit');
-    Route::put('/{subcategory}', [SubcategoryController::class, 'update'])->name('update');
-    Route::delete('/{subcategory}', [SubcategoryController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/restore', [SubcategoryController::class, 'restore'])->name('restore');
-    Route::delete('/{id}/force', [SubcategoryController::class, 'forceDelete'])->name('forceDelete');
-});
-
-// Ruta para mostrar subcategorías de una clase
-Route::get('/clases/{class}/subcategorias', [SubcategoryController::class, 'show'])->name('subcategories.show');
-
-// Rutas para Objetos
-Route::prefix('objetos')->name('objects.')->group(function () {
-    Route::get('/', [ObjectController::class, 'index'])->name('index');
-    Route::get('/create', [ObjectController::class, 'create'])->name('create');
-    Route::post('/', [ObjectController::class, 'store'])->name('store');
-    Route::get('/{objeto}/edit', [ObjectController::class, 'edit'])->name('edit');
-    Route::put('/{objeto}', [ObjectController::class, 'update'])->name('update');
-    Route::delete('/{objeto}', [ObjectController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/restore', [ObjectController::class, 'restore'])->name('restore');
-    Route::delete('/{id}/force', [ObjectController::class, 'forceDelete'])->name('forceDelete');
-});
-
-// Ruta para mostrar objetos de una subcategoría
-Route::get('/subcategorias/{subcategory}/objetos', [ObjectController::class, 'index'])->name('objects.bySubcategory');
-
-// Ruta para mostrar detalle de un objeto
-Route::get('/objetos/{objeto}', [ObjectController::class, 'show'])->name('objects.show');
-
-// Rutas para Atributos
-Route::prefix('atributos')->name('attributes.')->group(function () {
-    Route::get('/', [AttributeController::class, 'index'])->name('index');
-    Route::get('/create', [AttributeController::class, 'create'])->name('create');
-    Route::post('/', [AttributeController::class, 'store'])->name('store');
-    Route::get('/{attribute}/edit', [AttributeController::class, 'edit'])->name('edit');
-    Route::put('/{attribute}', [AttributeController::class, 'update'])->name('update');
-    Route::delete('/{attribute}', [AttributeController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/restore', [AttributeController::class, 'restore'])->name('restore');
-    Route::delete('/{id}/force', [AttributeController::class, 'forceDelete'])->name('forceDelete');
-    Route::delete('/{attribute}/dominios/{domain}', [AttributeController::class, 'destroyDomain'])->name('domains.destroy');
-});
-
-// Ruta para mostrar detalle de un atributo
-Route::get('/atributos/{attribute}', [AttributeController::class, 'show'])->name('attributes.show');
-
-// Rutas JSON para la API
-Route::prefix('json')->name('json.')->group(function () {
-    Route::get('/atributos', [JsonController::class, 'atributos'])->name('atributos');
-    Route::get('/catalogo', [JsonController::class, 'catalogo'])->name('catalogo');
-});
-
+require __DIR__.'/auth.php';

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attribute;
+use App\Http\Requests\StoreAttributeRequest;
+use App\Http\Requests\UpdateAttributeRequest;
+use App\Http\Requests\StoreDomainRequest;
 use Illuminate\Http\Request;
 
 class AttributeController extends Controller
@@ -27,13 +30,9 @@ class AttributeController extends Controller
     /**
      * Guarda un nuevo atributo.
      */
-    public function store(Request $request)
+    public function store(StoreAttributeRequest $request)
     {
-        $validated = $request->validate([
-            'code' => 'required|unique:attributes|max:10',
-            'name' => 'required|max:255',
-            'definition' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         $attribute = Attribute::create($validated);
 
@@ -50,16 +49,15 @@ class AttributeController extends Controller
 
         // Si viene una solicitud para agregar dominio
         if ($request->has('add_domain')) {
-            $validated = $request->validate([
-                'value_code' => 'required|max:10',
-                'label' => 'required|max:255',
-                'definition' => 'nullable',
-            ]);
+            $domainRequest = new StoreDomainRequest();
+            if ($domainRequest->authorize() && $domainRequest->validate($domainRequest->rules())) {
+                $validated = $domainRequest->validated();
 
-            $attribute->domains()->create($validated);
+                $attribute->domains()->create($validated);
 
-            return redirect()->route('attributes.edit', $attribute)
-                ->with('success', 'Dominio agregado exitosamente.');
+                return redirect()->route('attributes.edit', $attribute)
+                    ->with('success', 'Dominio agregado exitosamente.');
+            }
         }
 
         return view('catalog.attributes.edit', compact('attribute'));
@@ -68,13 +66,9 @@ class AttributeController extends Controller
     /**
      * Actualiza un atributo.
      */
-    public function update(Request $request, Attribute $attribute)
+    public function update(UpdateAttributeRequest $request, Attribute $attribute)
     {
-        $validated = $request->validate([
-            'code' => 'required|max:10|unique:attributes,code,' . $attribute->id,
-            'name' => 'required|max:255',
-            'definition' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         $attribute->update($validated);
 
@@ -126,23 +120,25 @@ class AttributeController extends Controller
 
     /**
      * Muestra los detalles de un atributo.
+     * Puede buscar por ID o por código.
      */
-    public function show(Attribute $attribute)
+    public function show(string $attribute)
     {
-        $attribute->load('domains');
-        return view('catalog.attributes.show', compact('attribute'));
+        // Intentar buscar por ID primero, si no funciona buscar por código
+        $attributeModel = Attribute::where('id', $attribute)
+            ->orWhere('code', $attribute)
+            ->firstOrFail();
+        
+        $attributeModel->load('domains');
+        return view('catalog.attributes.show', compact('attributeModel'));
     }
 
     /**
      * Agrega un dominio a un atributo.
      */
-    public function storeDomain(Request $request, Attribute $attribute)
+    public function storeDomain(StoreDomainRequest $request, Attribute $attribute)
     {
-        $validated = $request->validate([
-            'value_code' => 'required|max:10',
-            'label' => 'required|max:255',
-            'definition' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         $attribute->domains()->create($validated);
 

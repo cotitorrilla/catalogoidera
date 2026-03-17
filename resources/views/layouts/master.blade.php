@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Catálogo de Objetos Geográficos IDERA')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,7 +33,7 @@
     <header class="bg-idera-blue text-white shadow-lg">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <a href="{{ route('classes.index') }}" class="flex items-center space-x-4">
+                <a href="{{ route('home') }}" class="flex items-center space-x-4">
                     <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-gray-200">
                         <!-- Logo del organismo - reemplazar src con la ruta del logo real -->
                         <img src="" alt="Logo del organismo" class="w-full h-full object-cover hidden" id="organism-logo">
@@ -44,9 +45,18 @@
                     </div>
                 </a>
                 <nav class="hidden md:flex space-x-6">
-                    <a href="{{ route('classes.index') }}" class="hover:text-gray-300 transition">Inicio</a>
+                    <a href="{{ route('home') }}" class="hover:text-gray-300 transition">Inicio</a>
                     <a href="{{ route('attributes.index') }}" class="hover:text-gray-300 transition">Atributos</a>
                     <a href="#" class="hover:text-gray-300 transition">Documentación</a>
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="hover:text-gray-300 transition">Dashboard</a>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="hover:text-gray-300 transition">Cerrar sesión</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="bg-white text-idera-blue px-4 py-2 rounded-lg hover:bg-gray-100 transition font-medium">Iniciar sesión</a>
+                    @endauth
                 </nav>
             </div>
         </div>
@@ -57,7 +67,7 @@
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-2">
                 <nav class="breadcrumb text-sm text-gray-600 flex items-center space-x-2">
-                    <a href="{{ route('classes.index') }}" class="flex items-center hover:text-idera-blue">
+                    <a href="{{ route('home') }}" class="flex items-center hover:text-idera-blue">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
@@ -109,7 +119,7 @@
         <div class="container mx-auto px-4 py-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
-                    <p class="text-sm">© {{ date('Y') }} IDERA - Todos los derechos reservados</p>
+                    <p class="text-sm">© {{ date('Y') }} IDERA - To dos los derechos reservados</p>
                 </div>
                 <div class="flex space-x-4 text-sm">
                     <a href="#" class="hover:text-white transition">Términos de uso</a>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogClass;
 use App\Models\Subcategory;
+use App\Http\Requests\StoreSubcategoryRequest;
+use App\Http\Requests\UpdateSubcategoryRequest;
 use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
@@ -43,14 +45,9 @@ class SubcategoryController extends Controller
     /**
      * Guarda una nueva subcategoría.
      */
-    public function store(Request $request)
+    public function store(StoreSubcategoryRequest $request)
     {
-        $validated = $request->validate([
-            'class_id' => 'required|exists:classes,id',
-            'code' => 'required|max:10',
-            'name' => 'required|max:255',
-            'content' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         // Generar código único para la subcategoría (clase.subcódigo)
         $class = CatalogClass::find($request->class_id);
@@ -74,13 +71,9 @@ class SubcategoryController extends Controller
     /**
      * Actualiza una subcategoría.
      */
-    public function update(Request $request, Subcategory $subcategory)
+    public function update(UpdateSubcategoryRequest $request, Subcategory $subcategory)
     {
-        $validated = $request->validate([
-            'class_id' => 'required|exists:classes,id',
-            'name' => 'required|max:255',
-            'content' => 'nullable',
-        ]);
+        $validated = $request->validated();
 
         // Actualizar código si cambió la clase
         if ($request->class_id != $subcategory->class_id) {

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Subcategory;
 use App\Models\CatalogObject;
 use App\Models\Attribute;
+use App\Http\Requests\StoreObjectRequest;
+use App\Http\Requests\UpdateObjectRequest;
 use Illuminate\Http\Request;
 
 class ObjectController extends Controller
@@ -35,16 +37,9 @@ class ObjectController extends Controller
     /**
      * Guarda un nuevo objeto.
      */
-    public function store(Request $request)
+    public function store(StoreObjectRequest $request)
     {
-        $validated = $request->validate([
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'code' => 'required|max:20',
-            'name' => 'required|max:255',
-            'geometry' => 'nullable|max:50',
-            'definition' => 'nullable',
-            'attributes' => 'nullable|array',
-        ]);
+        $validated = $request->validated();
 
         // Generar código único: subcategoría.código
         $subcategory = Subcategory::find($request->subcategory_id);
@@ -74,15 +69,9 @@ class ObjectController extends Controller
     /**
      * Actualiza un objeto.
      */
-    public function update(Request $request, CatalogObject $object)
+    public function update(UpdateObjectRequest $request, CatalogObject $object)
     {
-        $validated = $request->validate([
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'name' => 'required|max:255',
-            'geometry' => 'nullable|max:50',
-            'definition' => 'nullable',
-            'attributes' => 'nullable|array',
-        ]);
+        $validated = $request->validated();
 
         // Actualizar código si cambió la subcategoría
         if ($request->subcategory_id != $object->subcategory_id) {
@@ -151,10 +140,13 @@ class ObjectController extends Controller
     /**
      * Muestra los detalles de un objeto.
      */
-    public function show(CatalogObject $object)
+    public function show($codigo)
     {
-        $object->load('subcategory.catalogClass', 'attributes.domains');
-        return view('catalog.objects.detail', compact('object'));
+        $objeto = CatalogObject::where('code', $codigo)
+            ->with(['subcategory.catalogClass', 'attributes.domains'])
+            ->firstOrFail();
+
+        return view('catalog.objects.detail', compact('objeto'));
     }
 }
 
