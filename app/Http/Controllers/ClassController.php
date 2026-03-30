@@ -5,15 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\CatalogClass;
 use App\Http\Requests\StoreClassRequest;
 use App\Http\Requests\UpdateClassRequest;
+use Illuminate\Http\Request;
 
 class ClassController extends Controller
 {
     /**
      * Muestra la lista de clases.
      */
-    public function index()
+public function index(Request $request)
     {
-        $classes = CatalogClass::with('subcategories')->get();
+        $query = CatalogClass::with([
+            'subcategories' => function($q) {
+                $q->withTrashed()->with([
+                    'objects' => fn($o) => $o->withTrashed()->with('attributes'),
+                ]);
+            }
+        ]);
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('code', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->boolean('trashed')) {
+            $query->onlyTrashed();
+        }
+
+        $classes = $query->paginate(20);
+
         return view('catalog.classes.list', compact('classes'));
     }
 
@@ -99,6 +118,27 @@ class ClassController extends Controller
 
         return redirect()->route('classes.index')
             ->with('success', 'Clase eliminada permanentemente.');
+    }
+
+    /**
+     * Muestra detalles de la clase con sus subcategorías.
+     */
+    public function show(Request $request, CatalogClass $class)
+    {
+        $query = $class->subcategories()->withTrashed();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('code', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->boolean('trashed')) {
+            $query->onlyTrashed();
+        }
+
+        $subcategories = $query->paginate(20);
+
+        return view('catalog.classes.show', compact('class', 'subcategories'));
     }
 }
 

@@ -12,8 +12,20 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+<x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.classes.index')" :active="request()->routeIs('admin.classes.*')">
+                        Gestión Clases
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.subcategories.index')" :active="request()->routeIs('admin.subcategories.*')">
+                        Subcategorías
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.objects.index')" :active="request()->routeIs('admin.objects.*')">
+                        Objetos
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.attributes.index')" :active="request()->routeIs('admin.attributes.*')">
+                        Atributos
                     </x-nav-link>
                 </div>
             </div>

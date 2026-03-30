@@ -1,85 +1,72 @@
-@extends('layouts.master')
-
-@section('title', 'Clases del Catálogo - IDERA')
-
-@php
-/**
- * Iconos asociados a cada clase del catálogo.
- * Representan visualmente el tipo de objetos geográficos de cada clase.
- */
-$classIcons = [
-    1  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
-    2  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>',
-    3  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>',
-    4  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-    5  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>',
-    6  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
-    7  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>',
-    9  => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>',
-    10 => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>',
-    11 => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>',
-    12 => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>',
-    23 => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>',
-];
-@endphp
+@extends('layouts.admin')
 
 @section('content')
-<div class="max-w-6xl mx-auto">
-    <div class="flex justify-between items-center mb-8">
+<div class="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Clases del Catálogo</h1>
-            <p class="text-gray-600">Explore las clases de objetos geográficos definidos por la comunidad IDERA.</p>
+            <h2 class="text-2xl font-bold text-gray-800">Gestión de Clases</h2>
+            <p class="text-gray-600">Administrar categorías del catálogo</p>
         </div>
-        <a href="{{ route('classes.create') }}" 
-           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-idera-blue rounded-lg hover:bg-blue-800 transition">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Nueva Clase
-        </a>
+        <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+
+            <a href="{{ route('admin.classes.create') }}" class="bg-idera-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition font-medium">
+                + Nueva Clase
+            </a>
+            <form method="GET" class="flex gap-2">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por código o nombre..." class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-idera-blue focus:border-transparent flex-1">
+                <button type="submit" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Buscar</button>
+            </form>
+        </div>
     </div>
 
-    @if($classes->isEmpty())
-        <div class="text-center py-12">
-            <div class="text-gray-400 mb-4">
-                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-3 mb-6">
+        <a href="{{ request()->fullUrlWithQuery(['trashed' => null]) }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg {{ !request('trashed') ? 'bg-idera-blue text-white' : '' }} hover:bg-idera-blue hover:text-white transition">
+            Activos
+        </a>
+        <a href="{{ request()->fullUrlWithQuery(['trashed' => 1]) }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg {{ request('trashed') ? 'bg-idera-blue text-white' : '' }} hover:bg-idera-blue hover:text-white transition">
+            Eliminados
+        </a>
+        @if(request('trashed'))
+            <a href="{{ route('admin.classes.index') }}" class="px-4 py-2 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">Limpiar Filtros</a>
+        @endif
+    </div>
+
+    <!-- Table Header -->
+    <div class="bg-gray-50 border border-gray-200 rounded-lg mb-4 overflow-hidden">
+        <div class="grid lg:grid-cols-14 md:grid-cols-12 grid-cols-10 lg:gap-8 md:gap-6 gap-4 items-center text-sm p-4 font-semibold text-gray-700 border-b">
+            <div class="col-span-1 text-center">SEL</div>
+            <div class="col-span-1 font-mono text-center">CÓDIGO</div>
+            <div class="col-span-4 lg:col-span-3 md:col-span-3 text-left">CLASE</div>
+            <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center">SUBCATEGORÍA</div>
+            <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center">OBJETOS</div>
+            <div class="col-span-1 text-center">ATRIB</div>
+            <div class="col-span-1 text-center">ESTADO</div>
+            <div class="col-span-3 lg:col-span-3 md:col-span-3 text-right">ACCIONES</div>
+        </div>
+    </div>
+
+    <!-- New Wide Hierarchy Display -->
+    <div class="space-y-4">
+        @forelse($classes as $class)
+            <x-class-hierarchy-row :class="$class" />
+        @empty
+            <div class="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-            </div>
-            <p class="text-gray-500">No hay clases disponibles en el catálogo.</p>
-        </div>
-    @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($classes as $index => $class)
-                @php
-                    $colors = $class->getColors();
-                    $icon = $classIcons[$class->code] ?? $classIcons[1];
-                @endphp
-                <a href="{{ route('subcategories.show', $class) }}"
-                   class="card-obj bg-white rounded-xl shadow-md border border-gray-100 p-6 transition-all duration-300 hover:border-{{ $colors['text'] }} group">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 rounded-lg {{ $colors['bg'] }} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                            <span class="text-white font-bold text-lg">{{ $class->code }}</span>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h2 class="text-xl font-semibold text-gray-800 mb-2 group-hover:{{ $colors['text'] }} transition-colors">
-                                {{ $class->name }}
-                            </h2>
-                            <p class="text-gray-600 text-sm">
-                                {{ $class->content }}
-                            </p>
-                            <div class="mt-4 flex items-center {{ $colors['text'] }} text-sm font-medium">
-                                <span>{{ $class->subcategories->count() }} subcategorías</span>
-                                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">No hay clases</h3>
+                <p class="text-gray-500 mb-4">Comienza creando la primera clase del catálogo.</p>
+                <a href="{{ route('admin.classes.create') }}" class="inline-flex items-center px-4 py-2 bg-idera-blue border border-transparent rounded-lg font-medium text-white hover:bg-opacity-90 focus:outline-none">
+                    + Crear Primera Clase
                 </a>
-            @endforeach
-        </div>
-    @endif
+            </div>
+        @endforelse
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6">
+        {{ $classes->appends(request()->query())->links() }}
+    </div>
 </div>
 @endsection
-

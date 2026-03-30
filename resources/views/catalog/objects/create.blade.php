@@ -1,132 +1,104 @@
-@extends('layouts.master')
-
-@section('title', 'Nuevo Objeto - IDERA')
-
-@php
-$breadcrumbs = [
-    ['label' => 'Clases', 'url' => route('home')],
-    ['label' => 'Nuevo Objeto']
-];
-@endphp
+@extends('layouts.admin')
 
 @section('content')
-<div class="max-w-3xl mx-auto">
-    <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h1 class="text-xl font-semibold text-gray-800">Nuevo Objeto</h1>
-            <p class="text-sm text-gray-600 mt-1">Complete los datos para crear un nuevo objeto geográfico</p>
-        </div>
-
-        <form action="{{ route('objects.store') }}" method="POST" class="p-6">
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-8">Nuevo Objeto</h2>
+        
+        <form method="POST" action="{{ route('admin.objects.store') }}">
             @csrf
-
-            <div class="space-y-4">
-                <!-- Subcategoría -->
-                <div>
-                    <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-1">Subcategoría *</label>
-                    <select name="subcategory_id" 
-                            id="subcategory_id"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('subcategory_id') border-red-500 @enderror"
-                            required>
-                        <option value="">Seleccione una subcategoría</option>
-                        @foreach($subcategories as $sub)
-                            <option value="{{ $sub->id }}" {{ old('subcategory_id') == $sub->id ? 'selected' : '' }}>
-                                {{ $sub->catalogClass->name }} > {{ $sub->code }} - {{ $sub->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('subcategory_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Código -->
-                <div>
-                    <label for="code" class="block text-sm font-medium text-gray-700 mb-1">Código de objeto *</label>
-                    <input type="text" 
-                           name="code" 
-                           id="code" 
-                           value="{{ old('code') }}"
-                           placeholder="Ej: 01"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('code') border-red-500 @enderror"
-                           required>
-                    @error('code')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-1 text-xs text-gray-500">Código numérico (se combinará con el código de la subcategoría)</p>
-                </div>
-
-                <!-- Nombre -->
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
-                    <input type="text" 
-                           name="name" 
-                           id="name" 
-                           value="{{ old('name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('name') border-red-500 @enderror"
-                           required>
-                    @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Geometría -->
-                <div>
-                    <label for="geometry" class="block text-sm font-medium text-gray-700 mb-1">Geometría</label>
-                    <select name="geometry" 
-                            id="geometry"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue">
-                        <option value="">Seleccione...</option>
-                        <option value="Punto" {{ old('geometry') == 'Punto' ? 'selected' : '' }}>Punto</option>
-                        <option value="Línea" {{ old('geometry') == 'Línea' ? 'selected' : '' }}>Línea</option>
-                        <option value="Polígono" {{ old('geometry') == 'Polígono' ? 'selected' : '' }}>Polígono</option>
-                        <option value="Punto/Polígono" {{ old('geometry') == 'Punto/Polígono' ? 'selected' : '' }}>Punto/Polígono</option>
-                    </select>
-                </div>
-
-                <!-- Definición -->
-                <div>
-                    <label for="definition" class="block text-sm font-medium text-gray-700 mb-1">Definición</label>
-                    <textarea name="definition" 
-                              id="definition" 
-                              rows="3"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('definition') border-red-500 @enderror">{{ old('definition') }}</textarea>
-                    @error('definition')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Atributos -->
-                @if($attributes->count() > 0)
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Atributos</label>
-                    <div class="border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto bg-gray-50">
-                        @foreach($attributes as $attr)
-                            <label class="flex items-center space-x-2 py-1 cursor-pointer">
-                                <input type="checkbox" 
-                                       name="attributes[]" 
-                                       value="{{ $attr->id }}"
-                                       {{ in_array($attr->id, old('attributes', [])) ? 'checked' : '' }}
-                                       class="rounded border-gray-300 text-idera-blue focus:ring-idera-blue">
-                                <span class="text-sm text-gray-700">
-                                    <span class="font-mono text-xs bg-gray-200 px-1 rounded mr-1">{{ $attr->code }}</span>
-                                    {{ $attr->name }}
-                                </span>
-                            </label>
-                        @endforeach
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Subcategoría *</label>
+                        <select name="subcategory_id" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('subcategory_id') border-red-500 @enderror">
+                            <option value="">Seleccionar subcategoría</option>
+                            @foreach($subcategories as $subcat)
+                                <option value="{{ $subcat->id }}" {{ old('subcategory_id') == $subcat->id ? 'selected' : '' }}>
+                                    {{ $subcat->catalogClass->code }} - {{ $subcat->code }} {{ $subcat->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('subcategory_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Código del Objeto *</label>
+                        <input type="text" name="code" value="{{ old('code') }}" required 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('code') border-red-500 @enderror"
+                               placeholder="Ej: 001">
+                        @error('code')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-sm text-gray-500">Código completo: SUBCATEGORÍA.CÓDIGO (ej: 01.01.001)</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('name') border-red-500 @enderror">
+                        @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Geometría *</label>
+                        <input type="text" name="geometry" value="{{ old('geometry') }}" required 
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('geometry') border-red-500 @enderror">
+                        @error('geometry')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <a href="{{ route('admin.attributes.create') }}" class="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Nuevo Atributo
+                        </a>
+                        <p class="mt-2 text-sm text-gray-500">Agregar atributos específicos para este objeto</p>
                     </div>
                 </div>
-                @endif
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Definición</label>
+                        <textarea name="definition" rows="6" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('definition') border-red-500 @enderror">{{ old('definition') }}</textarea>
+                        @error('definition')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Atributos (Opcional)</label>
+                        <div class="space-y-2">
+                            @foreach($attributes as $attribute)
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="attributes[]" value="{{ $attribute->id }}" 
+                                           class="rounded border-gray-300 text-idera-blue focus:ring-idera-blue h-4 w-4">
+                                    <span class="ml-3 text-sm">{{ $attribute->code }} - {{ $attribute->name }}</span>
+                                    @if($attribute->domains->count() > 0)
+                                        <span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Selección</span>
+                                    @endif
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('attributes')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
-
-            <!-- Botones -->
-            <div class="mt-6 flex justify-end space-x-3">
-                <a href="{{ route('home') }}"
-                   class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            
+            <div class="flex justify-end space-x-3 mt-8">
+                <a href="{{ route('admin.objects.index') }}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
                     Cancelar
                 </a>
-                <button type="submit" 
-                        class="px-4 py-2 text-sm font-medium text-white bg-idera-blue rounded-lg hover:bg-blue-800 transition">
+                <button type="submit" class="bg-idera-blue text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition font-medium">
                     Crear Objeto
                 </button>
             </div>
@@ -134,4 +106,3 @@ $breadcrumbs = [
     </div>
 </div>
 @endsection
-

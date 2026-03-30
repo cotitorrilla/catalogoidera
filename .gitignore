@@ -10,6 +10,8 @@
 /.nova
 /.phpunit.cache
 /.vscode
+/docker/
+.gitignore
 /.zed
 /auth.json
 /node_modules

@@ -1,95 +1,49 @@
-@extends('layouts.master')
-
-@section('title', 'Editar Clase: ' . $class->name . ' - IDERA')
-
-@php
-$breadcrumbs = [
-    ['label' => 'Clases', 'url' => route('home')],
-    ['label' => $class->name, 'url' => route('home')],
-    ['label' => 'Editar']
-];
-@endphp
+@extends('layouts.admin')
 
 @section('content')
 <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h1 class="text-xl font-semibold text-gray-800">Editar Clase</h1>
-            <p class="text-sm text-gray-600 mt-1">{{ $class->name }}</p>
-        </div>
-
-        <form action="{{ route('classes.update', $class) }}" method="POST" class="p-6">
-            @csrf
-            @method('PUT')
-
-            <div class="space-y-4">
-                <!-- Código -->
+    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-8">Editar Clase</h2>
+        
+        <form method="POST" action="{{ route('admin.classes.update', $class) }}">
+            @csrf @method('PUT')
+            <div class="space-y-6">
                 <div>
-                    <label for="code" class="block text-sm font-medium text-gray-700 mb-1">Código *</label>
-                    <input type="text" 
-                           name="code" 
-                           id="code" 
-                           value="{{ old('code', $class->code) }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('code') border-red-500 @enderror"
-                           required>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Código *</label>
+                    <input type="text" name="code" value="{{ old('code', $class->code) }}" required 
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('code') border-red-500 @enderror">
                     @error('code')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <!-- Nombre -->
+                
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
-                    <input type="text" 
-                           name="name" 
-                           id="name" 
-                           value="{{ old('name', $class->name) }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('name') border-red-500 @enderror"
-                           required>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                    <input type="text" name="name" value="{{ old('name', $class->name) }}" required 
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('name') border-red-500 @enderror">
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <!-- Descripción -->
+                
                 <div>
-                    <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                    <textarea name="content" 
-                              id="content" 
-                              rows="3"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-idera-blue focus:border-idera-blue @error('content') border-red-500 @enderror">{{ old('content', $class->content) }}</textarea>
-                    @error('content')
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Definición</label>
+                    <textarea name="definition" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-idera-blue focus:border-transparent @error('definition') border-red-500 @enderror">{{ old('definition', $class->definition) }}</textarea>
+                    @error('definition')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
-
-            <!-- Botones -->
-            <div class="mt-6 flex justify-between items-center">
-                <button type="button" 
-                        onclick="if(confirm('¿Está seguro de eliminar esta clase?')) document.getElementById('delete-form').submit()"
-                        class="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50 transition">
-                    Eliminar
+            
+            <div class="flex justify-end space-x-3 mt-8">
+                <a href="{{ route('admin.classes.index') }}" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="bg-idera-blue text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition font-medium">
+                    Actualizar Clase
                 </button>
-
-                <div class="flex space-x-3">
-                    <a href="{{ route('home') }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Cancelar
-                    </a>
-                    <button type="submit" 
-                            class="px-4 py-2 text-sm font-medium text-white bg-idera-blue rounded-lg hover:bg-blue-800 transition">
-                        Guardar Cambios
-                    </button>
-                </div>
             </div>
-        </form>
-
-        <form id="delete-form" action="{{ route('classes.destroy', $class) }}" method="POST" class="hidden">
-            @csrf
-            @method('DELETE')
         </form>
     </div>
 </div>
 @endsection
-

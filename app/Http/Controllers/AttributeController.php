@@ -13,9 +13,21 @@ class AttributeController extends Controller
     /**
      * Muestra la lista de atributos.
      */
-    public function index()
+public function index(Request $request)
     {
-        $attributes = Attribute::with('domains')->get();
+        $query = Attribute::with('domains');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('code', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->boolean('trashed')) {
+            $query->onlyTrashed();
+        }
+
+        $attributes = $query->paginate(20);
+
         return view('catalog.attributes.index', compact('attributes'));
     }
 

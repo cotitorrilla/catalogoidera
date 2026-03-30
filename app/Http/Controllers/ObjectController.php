@@ -14,14 +14,22 @@ class ObjectController extends Controller
     /**
      * Muestra los objetos de una subcategoría.
      */
-    public function index(Subcategory $subcategory = null)
+public function index(Request $request)
     {
-        if ($subcategory) {
-            $subcategory->load('objects', 'catalogClass');
-            return view('catalog.subcategories.objects', compact('subcategory'));
+        $query = CatalogObject::with(['subcategory.catalogClass', 'attributes']);
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('code', 'like', '%'.$request->search.'%');
         }
-        
-        return redirect()->route('classes.index');
+
+        if ($request->boolean('trashed')) {
+            $query->onlyTrashed();
+        }
+
+        $objects = $query->paginate(20);
+
+        return view('catalog.objects.index', compact('objects'));
     }
 
     /**

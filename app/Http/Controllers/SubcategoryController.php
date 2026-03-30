@@ -13,15 +13,22 @@ class SubcategoryController extends Controller
     /**
      * Muestra las subcategorías de una clase.
      */
-    public function index(CatalogClass $class = null)
+public function index(Request $request)
     {
-        if ($class) {
-            $class->load('subcategories.objects');
-            return view('catalog.classes.subcategories', compact('class'));
+        $query = Subcategory::with(['catalogClass', 'objects' => function($q) { $q->withTrashed(); }]);
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%')
+                  ->orWhere('code', 'like', '%'.$request->search.'%');
         }
-        
-        $classes = CatalogClass::with('subcategories')->get();
-        return view('catalog.classes.list', compact('classes'));
+
+        if ($request->boolean('trashed')) {
+            $query->onlyTrashed();
+        }
+
+        $subcategories = $query->paginate(20);
+
+        return view('catalog.subcategories.index', compact('subcategories'));
     }
 
     /**
