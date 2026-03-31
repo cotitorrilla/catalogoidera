@@ -1,15 +1,12 @@
-@props(['class'])
+ @props(['class'])
 
 <div class="border border-gray-200 rounded-lg overflow-hidden mb-4 hover:shadow-md transition-shadow">
   <!-- Class Header Row -->
   <details class="group">
     <summary class="list-none bg-gradient-to-r from-blue-50 to-indigo-50 p-6 cursor-pointer hover:bg-blue-100 transition-colors border-b-2 border-gray-300">
-<div class="grid lg:grid-cols-14 md:grid-cols-12 grid-cols-10 lg:gap-8 md:gap-6 gap-4 items-center text-sm border-l border-r border-gray-300">
-        <div class="col-span-1">
-          <input type="checkbox" class="rounded text-idera-blue">
-        </div>
-        <div class="col-span-1 font-mono font-bold text-idera-blue col-start-2 lg:col-start-2 md:col-start-2">{{ $class->code }}</div>
-        <div class="col-span-4 lg:col-span-3 md:col-span-3 font-semibold col-start-3">
+      <div class="grid lg:grid-cols-13 md:grid-cols-11 grid-cols-9 lg:gap-8 md:gap-6 gap-4 items-center text-sm border-l border-r border-gray-300">
+        <div class="col-span-1 font-mono font-bold text-idera-blue">{{ $class->code }}</div>
+        <div class="col-span-4 lg:col-span-3 md:col-span-3 font-semibold col-start-2">
           <a href="{{ route('admin.classes.edit', $class) }}" 
              class="inline-flex items-center px-4 py-2 bg-idera-blue text-white text-sm font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 group shadow-sm">
             {{ $class->name }}
@@ -22,34 +19,33 @@
             <p class="text-sm text-gray-500 mt-1">{{ Str::limit($class->content, 100) }}</p>
           @endif
         </div>
-        <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center col-start-7 lg:col-start-6 md:col-start-6">
+        <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center col-start-6 lg:col-start-5 md:col-start-5">
           <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
             {{ $class->subcategories->count() }} SUBCATEGORÍAS
           </div>
         </div>
-        <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center col-start-9 lg:col-start-8 md:col-start-8">
+        <div class="col-span-2 lg:col-span-2 md:col-span-2 text-center col-start-8 lg:col-start-7 md:col-start-7">
           <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
             {{ $class->subcategories->flatMap->objects->count() }} OBJETOS
           </div>
         </div>
-        <div class="col-span-1 text-center col-start-10">
+        <div class="col-span-1 text-center col-start-9">
           {{ $class->subcategories->flatMap->objects->flatMap->attributes->count() }} ATRIBUTOS
         </div>
-<div class="col-span-1 text-center col-start-11 lg:col-start-12 md:col-start-11">
+        <div class="col-span-1 text-center col-start-10 lg:col-start-11 md:col-start-10">
           <span class="px-2 py-1 {{ $class->trashed() ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} text-xs rounded-full font-medium">
-            {{ $class->trashed() ? 'Invisible' : 'Visible' }} ESTADO
+            {{ $class->trashed() ? 'Invisible' : 'Visible' }}
           </span>
         </div>
-        <div class="col-span-3 lg:col-span-3 md:col-span-3 text-right col-start-12 lg:col-start-13 md:col-start-12 flex justify-end items-center space-x-2 p-2 bg-gradient-to-r from-gray-50 to-transparent border-l border-gray-200">
-          {{-- Ver/Editar --}}
+        <div class="col-span-3 lg:col-span-3 md:col-span-3 text-right col-start-11 lg:col-start-12 md:col-start-11 flex justify-end items-center space-x-2 p-2 bg-gradient-to-r from-gray-50 to-transparent border-l border-gray-200">
+          {{-- Edit --}}
           <a href="{{ route('admin.classes.edit', $class) }}" 
              class="group relative p-2.5 bg-idera-blue/90 hover:bg-idera-blue text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 flex-shrink-0 w-10 h-10"
-             title="Ver / Editar clase">
+             title="Editar clase">
             <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
-            <span class="sr-only">Ver / Editar</span>
           </a>
           
           {{-- Toggle Visibility --}}
@@ -57,24 +53,36 @@
             <form method="POST" action="{{ route('admin.classes.restore', $class->id) }}" class="inline-flex flex-shrink-0" style="display: contents;">
               @csrf @method('POST')
               <button type="submit" class="group relative p-2.5 w-10 h-10 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border border-emerald-300 rounded-xl hover:shadow-md transition-all duration-200 flex-shrink-0"
-                      onclick="return confirm('{{ "¿Restaurar esta clase?" }}')"
-                      title="Restaurar visibilidad">
+                      onclick="return confirm('¿Restaurar esta clase?')"
+                      title="Restaurar">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                <span class="sr-only">Restaurar</span>
               </button>
             </form>
           @else
             <form method="POST" action="{{ route('admin.classes.destroy', $class) }}" class="inline-flex flex-shrink-0" style="display: contents;">
               @csrf @method('DELETE')
               <button type="submit" class="group relative p-2.5 w-10 h-10 bg-orange-100 hover:bg-orange-200 text-orange-800 border border-orange-300 rounded-xl hover:shadow-md transition-all duration-200 flex-shrink-0"
-                      onclick="return confirm('{{ "¿Hacer invisible esta clase?" }}')"
-                      title="Hacer invisible">
+                      onclick="return confirm('¿Hacer invisible esta clase?')"
+                      title="Ocultar">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 8.878l4.242 4.242M9.878 8.878L12 10.12m-.5-2.242a2.998 2.998 0 00-4.242 4.242M15.878 15.878l4.242-4.242M15.878 15.878L21 12.12" />
                 </svg>
-                <span class="sr-only">Ocultar</span>
+              </button>
+            </form>
+          @endif
+
+          {{-- Delete Permanente --}}
+          @if($class->subcategories->count() === 0)
+            <form method="POST" action="{{ route('admin.classes.forceDelete', $class->id) }}" class="inline-flex flex-shrink-0" style="display: contents;">
+              @csrf @method('DELETE')
+              <button type="submit" class="group relative p-2.5 w-10 h-10 bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 rounded-xl hover:shadow-md transition-all duration-200 flex-shrink-0"
+                      onclick="return confirm('¿Eliminar permanentemente esta clase? No recuperable.')"
+                      title="Eliminar permanente">
+                <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
               </button>
             </form>
           @endif
@@ -130,7 +138,7 @@
                     <span class="font-medium w-32">{{ $attr->code }}</span>
                     <span class="flex-1">{{ $attr->name }}</span>
                     <span class="px-2 py-1 bg-gray-100 text-xs rounded ml-2">{{ $attr->type }}</span>
-                    @if($attr->pivot->display_name)
+@if($attr->pivot->display_name)
                       <span class="text-xs text-gray-500 ml-2">[{{ $attr->pivot->display_name }}]</span>
                     @endif
                   </div>
@@ -153,4 +161,3 @@
 <script>
 // toggleVisibility function removed - replaced with direct form POST for better UX and no JS dependency
 </script>
-
